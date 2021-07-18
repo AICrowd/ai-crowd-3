@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 2021_06_14_121214) do
 
   # These are extensions that must be enabled in order to support this database
@@ -388,6 +389,8 @@ ActiveRecord::Schema.define(version: 2021_06_14_121214) do
     t.integer "sub_round_size", default: 1
     t.boolean "use_for_final_rating", default: false
     t.boolean "for_weekly_rating", default: false
+    t.datetime "last_calculated_at"
+    t.boolean "rating_calculated", default: false
     t.boolean "rating_calculated", default: false
     t.datetime "rank_last_calculated_at"
     t.boolean "is_tie_possible", default: true
@@ -793,6 +796,15 @@ ActiveRecord::Schema.define(version: 2021_06_14_121214) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
+  create_table "global_ranks", force: :cascade do |t|
+    t.integer "rank"
+    t.integer "participant_id"
+    t.integer "rating_id"
+    t.float "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "invitations", force: :cascade do |t|
     t.bigint "challenge_id"
     t.bigint "participant_id"
@@ -1174,6 +1186,17 @@ ActiveRecord::Schema.define(version: 2021_06_14_121214) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["challenge_id"], name: "index_publications_on_challenge_id"
+  end
+
+  create_table "ratings", force: :cascade do |t|
+    t.integer "challenge_leaderboard_extra_id", null: false
+    t.integer "participant_id", null: false
+    t.integer "rating", null: false
+    t.float "mu"
+    t.float "sigma"
+    t.integer "rank"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "redirects", force: :cascade do |t|
